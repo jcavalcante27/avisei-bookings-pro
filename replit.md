@@ -1,6 +1,6 @@
 # Overview
 
-This is a modern full-stack web application for an appointment scheduling system called "Avisei". The application is built with a TypeScript React frontend using Vite, shadcn/ui components, and Tailwind CSS for styling. The backend is an Express.js server with Drizzle ORM for database management and PostgreSQL as the primary database. The system focuses on automated email notifications for appointment confirmations and reminders to reduce no-shows and improve business efficiency.
+This is a modern full-stack web application for an appointment scheduling system called "Avisei". The application consists of a React frontend landing page and a Node.js Express backend API. The backend uses PostgreSQL as the primary database with direct pg library connection. The system focuses on automated email notifications for appointment confirmations and reminders to reduce no-shows and improve business efficiency.
 
 The application appears to be designed for service-based businesses like salons, clinics, and other establishments that need professional appointment management with automated communication features.
 
