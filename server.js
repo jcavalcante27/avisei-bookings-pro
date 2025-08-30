@@ -1,12 +1,24 @@
 import express from 'express';
 import cors from 'cors';
+import dotenv from 'dotenv';
 import { testConnection } from './db.js';
 import { User } from './models/User.js';
+import Service from './models/Service.js';
+import BusinessHour from './models/BusinessHour.js';
+import ProfessionalAvailability from './models/ProfessionalAvailability.js';
+import Appointment from './models/Appointment.js';
+
+// Configurar dotenv
+dotenv.config();
 
 // Importar rotas
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import indexRoutes from './routes/index.js';
+import serviceRoutes from './routes/services.js';
+import businessHourRoutes from './routes/businessHours.js';
+import availabilityRoutes from './routes/availability.js';
+import appointmentRoutes from './routes/appointments.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,6 +37,10 @@ app.get('/health', (req, res) => {
 app.use('/api', indexRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/services', serviceRoutes);
+app.use('/api/business-hours', businessHourRoutes);
+app.use('/api/availability', availabilityRoutes);
+app.use('/api/appointments', appointmentRoutes);
 
 // Rota raiz
 app.get('/', (req, res) => {
@@ -42,6 +58,28 @@ app.get('/', (req, res) => {
         list: 'GET /api/users',
         get: 'GET /api/users/:id',
         delete: 'DELETE /api/users/:id'
+      },
+      services: {
+        create: 'POST /api/services',
+        list: 'GET /api/services',
+        get: 'GET /api/services/:id',
+        byEstablishment: 'GET /api/services/establishment/:id'
+      },
+      businessHours: {
+        set: 'POST /api/business-hours',
+        bulk: 'POST /api/business-hours/bulk',
+        get: 'GET /api/business-hours/establishment/:id'
+      },
+      availability: {
+        set: 'POST /api/availability',
+        professional: 'GET /api/availability/professional/:id',
+        slots: 'GET /api/availability/slots/:id'
+      },
+      appointments: {
+        create: 'POST /api/appointments',
+        my: 'GET /api/appointments/my',
+        available: 'GET /api/appointments/available-slots',
+        today: 'GET /api/appointments/today'
       }
     }
   });
@@ -58,7 +96,11 @@ const startServer = async () => {
       // Criar tabelas do banco de dados
       console.log('Criando tabelas do banco de dados...');
       await User.createTable();
-      console.log('Tabelas criadas com sucesso!');
+      await Service.createTable();
+      await BusinessHour.createTable();
+      await ProfessionalAvailability.createTable();
+      await Appointment.createTable();
+      console.log('✅ Todas as tabelas criadas com sucesso!');
     } else {
       console.log('⚠️  DATABASE_URL não configurada. Banco de dados desabilitado.');
       console.log('   Configure DATABASE_URL nos Secrets para ativar o banco.');
