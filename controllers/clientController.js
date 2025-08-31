@@ -242,40 +242,9 @@ class ClientController {
 
       await query(cancelSql, [reason || 'Cancelado pelo cliente', appointmentId]);
 
-      // Enviar email de cancelamento
+      // Enviar emails de cancelamento
       try {
-        const client = req.user;
-        
-        // Email para o cliente
-        await emailService.sendCancellationEmail(
-          client.email,
-          client.name,
-          {
-            id: appointment.id,
-            date: appointment.appointment_date,
-            time: appointment.appointment_time,
-            service: appointment.service_name,
-            professional: appointment.professional_name,
-            establishment: appointment.establishment_name
-          }
-        );
-
-        // Email para o estabelecimento
-        await emailService.sendCancellationEmail(
-          appointment.establishment_email,
-          appointment.establishment_name,
-          {
-            id: appointment.id,
-            date: appointment.appointment_date,
-            time: appointment.appointment_time,
-            service: appointment.service_name,
-            professional: appointment.professional_name,
-            client: client.name,
-            client_phone: client.phone
-          },
-          true // isEstablishment
-        );
-
+        await emailService.sendAppointmentCancellation(appointment);
       } catch (emailError) {
         console.error('Erro ao enviar email de cancelamento:', emailError);
         // Não falhar o cancelamento por erro de email
@@ -359,6 +328,19 @@ class ClientController {
       `;
 
       const result = await query(updateSql, [new_date, new_time, appointmentId]);
+      
+      // Enviar emails de reagendamento
+      try {
+        const updatedAppointment = result.rows[0];
+        await emailService.sendAppointmentReschedule(
+          updatedAppointment, 
+          appointment.appointment_date, 
+          appointment.appointment_time
+        );
+      } catch (emailError) {
+        console.error('Erro ao enviar email de reagendamento:', emailError);
+        // Não falhar o reagendamento por erro de email
+      }
 
       res.json({
         success: true,
