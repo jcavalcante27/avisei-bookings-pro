@@ -146,6 +146,18 @@ class AuthController extends BaseController {
       return this.error(res, 'Token inválido', 401);
     }
   }
+
+  async logout(req, res) {
+    try {
+      // Como estamos usando JWT stateless, o logout é feito no frontend
+      // removendo o token do localStorage/sessionStorage
+      // Aqui apenas confirmamos o logout com sucesso
+      return this.success(res, null, 'Logout realizado com sucesso');
+    } catch (error) {
+      console.error('Erro no logout:', error);
+      return this.error(res, 'Erro interno do servidor');
+    }
+  }
 }
 
 export default AuthController;

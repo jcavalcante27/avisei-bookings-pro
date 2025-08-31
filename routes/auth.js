@@ -12,6 +12,7 @@ router.post('/login', (req, res) => authController.login(req, res));
 // Rotas protegidas (requerem autenticação)
 router.get('/profile', authenticateToken, (req, res) => authController.getProfile(req, res));
 router.post('/verify', (req, res) => authController.verifyToken(req, res));
+router.post('/logout', authenticateToken, (req, res) => authController.logout(req, res));
 
 // Rotas específicas para cadastro de cada tipo de usuário
 router.post('/register/super-admin', requireSuperAdmin, (req, res) => {
