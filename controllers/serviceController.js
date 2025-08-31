@@ -6,7 +6,7 @@ class ServiceController extends BaseController {
 
   async create(req, res) {
     try {
-      const { name, description, duration, price } = req.body;
+      const { name, description, duration, price, commission_percentage = 50.00 } = req.body;
       const { userId } = req.user;
 
       // Validações
@@ -33,7 +33,8 @@ class ServiceController extends BaseController {
         name,
         description,
         duration: parseInt(duration),
-        price: parseFloat(price)
+        price: parseFloat(price),
+        commission_percentage: parseFloat(commission_percentage)
       });
 
       return this.success(res, service, 'Serviço criado com sucesso');
@@ -94,7 +95,7 @@ class ServiceController extends BaseController {
   async update(req, res) {
     try {
       const { id } = req.params;
-      const { name, description, duration, price } = req.body;
+      const { name, description, duration, price, commission_percentage } = req.body;
       const { userId } = req.user;
 
       const service = await Service.findById(id);
@@ -116,7 +117,8 @@ class ServiceController extends BaseController {
         name,
         description,
         duration: parseInt(duration),
-        price: parseFloat(price)
+        price: parseFloat(price),
+        commission_percentage: commission_percentage ? parseFloat(commission_percentage) : service.commission_percentage
       });
 
       return this.success(res, updatedService, 'Serviço atualizado com sucesso');

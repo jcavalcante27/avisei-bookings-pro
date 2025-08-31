@@ -19,6 +19,7 @@ import serviceRoutes from './routes/services.js';
 import businessHourRoutes from './routes/businessHours.js';
 import availabilityRoutes from './routes/availability.js';
 import appointmentRoutes from './routes/appointments.js';
+import reportRoutes from './routes/reports.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -41,6 +42,7 @@ app.use('/api/services', serviceRoutes);
 app.use('/api/business-hours', businessHourRoutes);
 app.use('/api/availability', availabilityRoutes);
 app.use('/api/appointments', appointmentRoutes);
+app.use('/api/reports', reportRoutes);
 
 // Rota raiz
 app.get('/', (req, res) => {
@@ -80,6 +82,11 @@ app.get('/', (req, res) => {
         my: 'GET /api/appointments/my',
         available: 'GET /api/appointments/available-slots',
         today: 'GET /api/appointments/today'
+      },
+      reports: {
+        appointments: 'GET /api/reports/appointments',
+        commissions: 'GET /api/reports/commissions',
+        dashboard: 'GET /api/reports/dashboard'
       }
     }
   });

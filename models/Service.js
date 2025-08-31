@@ -11,6 +11,7 @@ class Service {
         description TEXT,
         duration INTEGER NOT NULL, -- duração em minutos
         price DECIMAL(10,2) NOT NULL,
+        commission_percentage DECIMAL(5,2) DEFAULT 50.00, -- porcentagem de comissão para o profissional
         active BOOLEAN DEFAULT true,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -21,15 +22,15 @@ class Service {
   }
 
   static async create(serviceData) {
-    const { establishment_id, name, description, duration, price } = serviceData;
+    const { establishment_id, name, description, duration, price, commission_percentage = 50.00 } = serviceData;
     
     const sql = `
-      INSERT INTO services (establishment_id, name, description, duration, price) 
-      VALUES ($1, $2, $3, $4, $5) 
+      INSERT INTO services (establishment_id, name, description, duration, price, commission_percentage) 
+      VALUES ($1, $2, $3, $4, $5, $6) 
       RETURNING *
     `;
     
-    const result = await query(sql, [establishment_id, name, description, duration, price]);
+    const result = await query(sql, [establishment_id, name, description, duration, price, commission_percentage]);
     return result.rows[0];
   }
 
@@ -46,14 +47,14 @@ class Service {
   }
 
   static async update(id, updateData) {
-    const { name, description, duration, price } = updateData;
+    const { name, description, duration, price, commission_percentage } = updateData;
     const sql = `
       UPDATE services 
-      SET name = $1, description = $2, duration = $3, price = $4, updated_at = CURRENT_TIMESTAMP 
-      WHERE id = $5 AND active = true
+      SET name = $1, description = $2, duration = $3, price = $4, commission_percentage = $5, updated_at = CURRENT_TIMESTAMP 
+      WHERE id = $6 AND active = true
       RETURNING *
     `;
-    const result = await query(sql, [name, description, duration, price, id]);
+    const result = await query(sql, [name, description, duration, price, commission_percentage, id]);
     return result.rows[0];
   }
 
