@@ -49,8 +49,10 @@ router.get('/', (req, res) => {
         reschedule: 'PATCH /api/v1/client/appointments/:id/reschedule'
       },
       export: {
-        appointments: 'GET /api/v1/export/appointments?format=csv',
-        commissions: 'GET /api/v1/export/commissions?format=json'
+        appointments_professional: 'GET /api/v1/export/appointments/professional?format=csv&professional_id=1&start_date=2025-08-01',
+        appointments_date: 'GET /api/v1/export/appointments/date?format=xlsx&date=2025-08-01&period=week',
+        commissions: 'GET /api/v1/export/commissions?format=csv&start_date=2025-08-01&end_date=2025-08-31',
+        appointments_legacy: 'GET /api/v1/export/appointments?format=csv'
       }
     }
   });
